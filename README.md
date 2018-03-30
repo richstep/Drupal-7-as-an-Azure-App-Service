@@ -12,9 +12,11 @@
 
 5. Rename `Dockerfile` back to `Dockerfile.BASE.txt`
 6. Rename `Dockerfile.PRIMARY.txt` back to `Dockerfile`
+7. Edit line 1 of `Dockerfile`. 
 
 ### How to Build the Image with your Drupal Site
- 1. Run `docker build --rm -f Dockerfile -t drupal7_for_docker:latest .` 
+ 1. Run `docker build --rm -f Dockerfile -t drupal7_for_docker:latest .` the `FROM` command should reference the base container that you pushed to your Azure container registry. For example:
+ >FROM MyContainerRegistryName.azurecr.io/drupal7_for_docker:base
 
 ### How to Run your Site Locally
 1. Run `docker run --rm -it -p 2222:2222 -p 80:80 drupal7_for_docker:latest`
