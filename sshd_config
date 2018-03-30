@@ -1,0 +1,16 @@
+# Copied from: https://github.com/Azure/app-service-builtin-images/blob/master/php/7.2.1-apache/sshd_config
+# This is ssh server systemwide configuration file.
+#
+# /etc/sshd_config
+
+Port 			2222
+ListenAddress 		0.0.0.0
+LoginGraceTime 		180
+X11Forwarding 		yes
+Ciphers aes128-cbc,3des-cbc,aes256-cbc
+MACs hmac-sha1,hmac-sha1-96
+StrictModes 		yes
+SyslogFacility 		DAEMON
+PasswordAuthentication 	yes
+PermitEmptyPasswords 	no
+PermitRootLogin 	yes
