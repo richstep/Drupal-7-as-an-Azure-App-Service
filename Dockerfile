@@ -10,18 +10,24 @@ ENV PHP_VERSION 7.2.1
 
 COPY init_container.sh /bin/
 
-RUN chmod 777 /bin/init_container.sh \
-   # Run dos2unix so script will execute properly if image is build by Docker for Windows
-   && dos2unix /bin/init_container.sh \
-   && rm -rf /var/lib/apt/lists/* 
-
-RUN mkdir -p /myvol \
-    && echo "hello world" > /myvol/greeting
+# Create Docker volumes to persist files that we don't want in the container
+RUN mkdir -p /myvol/ftp \
+    && echo "hello world" > /myvol/ftp/greeting.txt
 VOLUME /myvol
 
 RUN mkdir -p ${DRUPAL_HOME}/sites/default/files \
-    && echo "hello world defaultfiles" > ${DRUPAL_HOME}/sites/default/files/greeting2
+    && echo "hello world defaultfiles" > ${DRUPAL_HOME}/sites/default/files/greeting2.txt
 VOLUME ${DRUPAL_HOME}/sites/default/files
+
+RUN chmod 777 /bin/init_container.sh \
+   # Run dos2unix so script will execute properly if image is build by Docker for Windows
+   && dos2unix /bin/init_container.sh \
+   && rm -rf /var/lib/apt/lists/* \
+   && mkdir -p /home/richie \
+   #&& mkdir -p /home/richie2 \
+   # Create symbolic links
+   && ln -s /home/richie /myvol/ftp 
+   #&& ln -s /home/richie2 /var/log/apache2 
 
 # *** Add your Drupal 7 files to the image ***
 ADD drupal7-codebase/. $DRUPAL_FILE_TEMP_HOME

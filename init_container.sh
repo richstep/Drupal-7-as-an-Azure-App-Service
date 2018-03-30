@@ -13,7 +13,7 @@ PHP quickstart: https://aka.ms/php-qs
 
 EOL
 
-mkdir -p /home/site/wwwroot
+#mkdir -p /home/site/wwwroot
 
 if [ ! $WEBSITES_ENABLE_APP_SERVICE_STORAGE ]; then
 	echo "INFO: NOT in Azure, chown for "$DRUPAL_HOME
