@@ -24,8 +24,8 @@ RUN mkdir -p ${DRUPAL_HOME}/sites/default/files \
 VOLUME ${DRUPAL_HOME}/sites/default/files
 
 # *** Add your Drupal 7 files to the image ***
-ADD smg-drupal7-codebase/. $DRUPAL_FILE_TEMP_HOME
-#ADD smg-drupal7-codebase/. /var/mydrupalcode
+ADD drupal7-codebase/. $DRUPAL_FILE_TEMP_HOME
+#ADD drupal7-codebase/. /var/mydrupalcode
 
 EXPOSE 2222 80
 
