@@ -1,4 +1,4 @@
-FROM drupal7_for_docker:base
+FROM creg7smg.azurecr.io/drupal7_for_docker:base
 #This file was inspired by: https://github.com/Azure/app-service-builtin-images/tree/master/php/7.2.1-apache
 
 # RUN apt-get update
