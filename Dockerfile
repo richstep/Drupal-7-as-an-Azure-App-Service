@@ -1,36 +1,34 @@
-FROM creg7smg.azurecr.io/drupal7_for_docker:base
-#This file was inspired by: https://github.com/Azure/app-service-builtin-images/tree/master/php/7.2.1-apache
+#### DOCKER FILE FOR BASE IMAGE #####
+#FROM php:7.2.4-apache-stretch
 
-# RUN apt-get update
+##/bin/sh: 1: a2enmod: not found
+##FROM php:7.2.4-fpm-stretch 
+
+###/bin/sh: 1: a2enmod: not found
+###FROM php:7.0-fpm-jessie
+#This file was inspired by: https://github.com/bitnami/bitnami-docker-apache
+FROM bitnami/apache:latest
 
 ENV DRUPAL_HOME "/home/site/wwwroot"
-#ENV DRUPAL_FILE_TEMP_HOME "/var/mydrupalcode"
-ENV APACHE_RUN_USER www-data
-ENV PHP_VERSION 7.2.1
+
+ENV SSH_PASSWD "root:Docker!"
 
 COPY init_container.sh /bin/
+COPY my_vhost.conf /bitnami/apache/conf/vhosts/
 
-#RUN mkdir -p ${DRUPAL_HOME}/sites/default/files \
-#    && echo "hello world defaultfiles" > ${DRUPAL_HOME}/sites/default/files/greeting2.txt
-#VOLUME ${DRUPAL_HOME}/sites/default/files
+#COPY apache2.conf /bin/
+COPY Base/hostingfile.html $DRUPAL_HOME/index.html
 
-RUN chmod 777 /bin/init_container.sh \
-   # Run dos2unix so script will execute properly if image is build by Docker for Windows
-   && dos2unix /bin/init_container.sh \
-   && rm -rf /var/lib/apt/lists/* \
-   && mkdir -p ${DRUPAL_HOME}
+RUN apt-get update && apt-get install -y \
+    dos2unix   openssh-server \
+    && echo "$SSH_PASSWD" | chpasswd 
+# Run dos2unix so script will execute properly if image is build by Docker for Windows
+RUN dos2unix /bin/init_container.sh 
 
-# *** Add your Drupal 7 files to the image ***
-#ADD drupal7-codebase/. $DRUPAL_FILE_TEMP_HOME
+COPY sshd_config /etc/ssh/
+
 ADD drupal7-codebase/. ${DRUPAL_HOME}
-##ADD drupal7-codebase/. /var/mydrupalcode
 
 EXPOSE 2222 80
-
-ENV WEBSITE_ROLE_INSTANCE_ID localRoleInstance
-ENV WEBSITE_INSTANCE_ID localInstance
-ENV PATH ${PATH}:/home/site
-
-WORKDIR /var/www
 
 ENTRYPOINT ["init_container.sh"]

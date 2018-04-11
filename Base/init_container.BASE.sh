@@ -13,8 +13,6 @@ PHP quickstart: https://aka.ms/php-qs
 
 EOL
 
-mkdir -p /home/site/wwwroot
-
 if [ ! $WEBSITES_ENABLE_APP_SERVICE_STORAGE ]; then
 	echo "INFO: NOT in Azure, chown for "$DRUPAL_HOME
 	chown -R www-data:www-data $DRUPAL_HOME
@@ -31,6 +29,6 @@ echo "Starting SSH ..."
 service ssh start
 
 #start apache
-mkdir -p /var/lock/apache2 
-mkdir -p /var/run/apache2
-/usr/sbin/apache2ctl -D FOREGROUND
+#mkdir -p /var/lock/apache2 
+#mkdir -p /var/run/apache2
+#/usr/sbin/apache2ctl -D FOREGROUND

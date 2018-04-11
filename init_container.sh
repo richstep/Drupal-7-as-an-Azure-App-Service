@@ -13,7 +13,7 @@ PHP quickstart: https://aka.ms/php-qs
 
 EOL
 
-#mkdir -p /home/site/wwwroot
+set -e
 
 if [ ! $WEBSITES_ENABLE_APP_SERVICE_STORAGE ]; then
 	echo "INFO: NOT in Azure, chown for "$DRUPAL_HOME
@@ -24,7 +24,7 @@ fi
 
 
 # Get environment variables to show up in SSH session
-eval $(printenv | awk -F= '{print "export " $1"="$2 }' >> /etc/profile)
+#eval $(printenv | awk -F= '{print "export " $1"="$2 }' >> /etc/profile)
 
 
 echo "Starting SSH ..."
@@ -45,6 +45,8 @@ service ssh start
 test ! -d "$DRUPAL_HOME/sites" && echo "INFO: $DRUPAL_HOME/sites not found"  
 
 #start apache
-mkdir -p /var/lock/apache2 
-mkdir -p /var/run/apache2
-/usr/sbin/apache2ctl -D FOREGROUND
+#mkdir -p /var/lock/apache2 
+#mkdir -p /var/run/apache2
+#/usr/sbin/apache2ctl -D FOREGROUND
+#/opt/bitnami/apache2/bin/apachectl -D FOREGROUND
+#exec "$@"
