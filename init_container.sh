@@ -32,14 +32,14 @@ service ssh start
 
 #copy files to apache root and create sites/default directory
 #cp -a $DRUPAL_FILE_TEMP_HOME/. /home/site/wwwroot 
-cp -a $DRUPAL_FILE_TEMP_HOME/. /home/site/wwwroot      
+#cp -a $DRUPAL_FILE_TEMP_HOME/. /home/site/wwwroot      
 
-rm -rf $DRUPAL_FILE_TEMP_HOME
-chmod a+w "$DRUPAL_HOME/sites/default"       
-mkdir -p "$DRUPAL_HOME/sites/default/files"      
-chmod a+w "$DRUPAL_HOME/sites/default/files"   
-cp "$DRUPAL_HOME/sites/default/default.settings.php" "$DRUPAL_HOME/sites/default/settings.php"   
-chmod a+w "$DRUPAL_HOME/sites/default/settings.php"  
+#rm -rf $DRUPAL_FILE_TEMP_HOME
+#chmod a+w "$DRUPAL_HOME/sites/default"       
+#mkdir -p "$DRUPAL_HOME/sites/default/files"      
+#chmod a+w "$DRUPAL_HOME/sites/default/files"   
+#cp "$DRUPAL_HOME/sites/default/default.settings.php" "$DRUPAL_HOME/sites/default/settings.php"   
+#chmod a+w "$DRUPAL_HOME/sites/default/settings.php"  
 
 
 test ! -d "$DRUPAL_HOME/sites" && echo "INFO: $DRUPAL_HOME/sites not found"  
