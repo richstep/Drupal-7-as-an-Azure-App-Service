@@ -1,4 +1,4 @@
-FROM drupal-7-as-an-azure-app-service2:base
+FROM creg7smg.azurecr.io/drupal-7-as-an-azure-app-service:base
 
 ENV DRUPAL_HOME "/home/site/wwwroot"
 
