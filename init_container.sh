@@ -44,9 +44,10 @@ service ssh start
 
 test ! -d "$DRUPAL_HOME/sites" && echo "INFO: $DRUPAL_HOME/sites not found"  
 
-#start apache
-#mkdir -p /var/lock/apache2 
-#mkdir -p /var/run/apache2
+
+mkdir -p /var/lock/apache2 
+mkdir -p /var/run/apache2
 #/usr/sbin/apache2ctl -D FOREGROUND
 #/opt/bitnami/apache2/bin/apachectl -D FOREGROUND
+/opt/bitnami/apache/bin/apachectl -D FOREGROUND
 #exec "$@"
