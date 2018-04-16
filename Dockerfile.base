@@ -1,32 +1,61 @@
 #### DOCKER FILE FOR BASE IMAGE #####
-#FROM php:7.2.4-apache-stretch
-
-##/bin/sh: 1: a2enmod: not found
-##FROM php:7.2.4-fpm-stretch 
-
-###/bin/sh: 1: a2enmod: not found
-###FROM php:7.0-fpm-jessie
-#This file was inspired by: https://github.com/Azure/app-service-builtin-images/tree/master/php/7.2.1-apache
-FROM bitnami/apache:latest
+FROM drupal:7.58-apache
 
 ENV DRUPAL_HOME "/home/site/wwwroot"
 
 ENV SSH_PASSWD "root:Docker!"
 
 COPY Base/init_container.BASE.sh /bin/
-COPY apache2.conf /bin/
-COPY Base/hostingfile.html $DRUPAL_HOME/index.html
+
+WORKDIR /usr/home
+
+RUN \
+    curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer   \
+    && COMPOSER_HOME=/opt/composer composer --quiet global require drush/drush:8.* \
+    && ln -s /opt/composer/vendor/drush/drush/drush /bin/drush \
+    && /bin/drush --version \
+    && /bin/drush dl drush_language-8.x 
 
 RUN apt-get update && apt-get install -y \
-    dos2unix   openssh-server \
-    && echo "$SSH_PASSWD" | chpasswd 
-# Run dos2unix so script will execute properly if image is build by Docker for Windows
-RUN dos2unix /bin/init_container.BASE.sh 
+    dos2unix \
+    openssh-server \
+    nano \
+        && echo "$SSH_PASSWD" | chpasswd \
+        && echo "cd /home" >> /etc/bash.bashrc
+
+ RUN \
+    dos2unix /bin/init_container.BASE.sh \
+    && rm -f /var/log/apache2/* \
+    && rmdir /var/lock/apache2 \
+    && rmdir /var/run/apache2 \
+    && rmdir /var/log/apache2 \
+    && chmod 777 /var/log \
+    && chmod 777 /var/run \
+    && chmod 777 /var/lock \
+    #&& rm -rf /var/www/html/wwwroot \
+    && rm -rf /var/log/apache2 \
+    && mkdir -p ${DRUPAL_HOME} \
+    && mkdir -p /home/LogFiles \
+    #&& ln -s $DRUPAL_HOME /var/www/html \
+    && ln -s /home/LogFiles /var/log/apache2 \
+    && rm -r /usr/local/bin/composer \  
+    && rm -rf /var/lib/apt/lists/* 
+        # Run dos2unix so script will execute properly if image is build by Docker for Windows
+RUN { \
+                echo 'error_log=/var/log/apache2/php-error.log'; \
+                echo 'display_errors=Off'; \
+                echo 'log_errors=On'; \
+                echo 'display_startup_errors=Off'; \
+                echo 'date.timezone=UTC'; \
+    } > /usr/local/etc/php/conf.d/php.ini
 
 COPY sshd_config /etc/ssh/
 
-ADD drupal7-codebase/. ${DRUPAL_HOME}
+#ADD drupal7-codebase/. ${DRUPAL_HOME}
 
 EXPOSE 2222 80
+
+#CMD ["/usr/sbin/apache2ctl", "-D", "FOREGROUND"]
 
 ENTRYPOINT ["init_container.BASE.sh"]
