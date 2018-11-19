@@ -115,6 +115,20 @@ $SERVERPASSWORD="your password here"
     `az webapp config container set --docker-custom-image-name $IMAGENAME --docker-registry-server-url $SERVERURL --docker-registry-server-user $SERVERUSER --docker-registry-server-password $SERVERPASSWORD  --name $SITENAME --resource-group $RESOURCEGROUP`
 
 ### How to Configure your Azure App Service 
+
+PowerShell
+$props = (Invoke-AzureRMResourceAction -ResourceGroupName $myResourceGroup `
+ -ResourceType Microsoft.Web/sites/Config -Name $mySite/appsettings `
+ -Action list -ApiVersion 2015-08-01 -Force).Properties
+
+$hash = @{}
+ $props | Get-Member -MemberType NoteProperty | % { $hash[$_.Name] = $props.($_.Name) }
+
+$hash.WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "true"
+$hash.WEBSITES_CONTAINER_START_TIME_LIMIT = "600"
+
+Set-AzureRmWebApp -ResourceGroup  $myResourceGroup -Name $mySite -AppSettings $hash 
+
 1. Add or update the application settings. To do so, using the Azure portal, navigate to your app service. Under settings scroll down until you see `Application settings`
 2. Since we need your Drupal files to be persisted, add or update the Setting ```WEBSITES_ENABLE_APP_SERVICE_STORAGE``` = true 
 >If the ```WEBSITES_ENABLE_APP_SERVICE_STORAGE``` setting is false, the /home/ directory will not be shared across scale instances, and files that are written there will not be persisted across restarts.
