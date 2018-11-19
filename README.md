@@ -109,36 +109,22 @@ $SERVERPASSWORD="your password here"
 8. Create the web application (app service) on the plan. specify the node version your app requires
 
     `az webapp create --name $SITENAME --plan $PLANNAME --deployment-container-image-name $IMAGENAME --resource-group $RESOURCEGROUP`
+ Pulling and running your image may need some time. Add or update the setting: ```WEBSITES_CONTAINER_START_TIME_LIMIT``` = 600
+9. Add two new app configurations:
+`az webapp config appsettings set -g MyResourceGroup -n MyUniqueApp --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true`
+>If the ```WEBSITES_ENABLE_APP_SERVICE_STORAGE``` setting is false, the /home/ directory will not be shared across scale instances, and files that are written there will not be persisted across restarts.
 
-9. Configure the container information
+`az webapp config appsettings set -g MyResourceGroup -n MyUniqueApp --settings WEBSITES_CONTAINER_START_TIME_LIMIT =600`
+ Pulling and running your image may need some time. Add or update the setting: ```WEBSITES_CONTAINER_START_TIME_LIMIT``` = 600
+ 
+10. Configure the container information
 
     `az webapp config container set --docker-custom-image-name $IMAGENAME --docker-registry-server-url $SERVERURL --docker-registry-server-user $SERVERUSER --docker-registry-server-password $SERVERPASSWORD  --name $SITENAME --resource-group $RESOURCEGROUP`
 
-### How to Configure your Azure App Service 
-
-PowerShell
-$props = (Invoke-AzureRMResourceAction -ResourceGroupName $myResourceGroup `
- -ResourceType Microsoft.Web/sites/Config -Name $mySite/appsettings `
- -Action list -ApiVersion 2015-08-01 -Force).Properties
-
-$hash = @{}
- $props | Get-Member -MemberType NoteProperty | % { $hash[$_.Name] = $props.($_.Name) }
-
-$hash.WEBSITES_ENABLE_APP_SERVICE_STORAGE" = "true"
-$hash.WEBSITES_CONTAINER_START_TIME_LIMIT = "600"
-
-Set-AzureRmWebApp -ResourceGroup  $myResourceGroup -Name $mySite -AppSettings $hash 
-
-1. Add or update the application settings. To do so, using the Azure portal, navigate to your app service. Under settings scroll down until you see `Application settings`
-2. Since we need your Drupal files to be persisted, add or update the Setting ```WEBSITES_ENABLE_APP_SERVICE_STORAGE``` = true 
->If the ```WEBSITES_ENABLE_APP_SERVICE_STORAGE``` setting is false, the /home/ directory will not be shared across scale instances, and files that are written there will not be persisted across restarts.
-3. Pulling and running your image may need some time. Add or update the setting: ```WEBSITES_CONTAINER_START_TIME_LIMIT``` = 600
-4. FTP into your app service and update settings.php to reflect your Drupal database location. Instructions are [here](https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-ftp?toc=%2fazure%2fapp-service%2fcontainers%2ftoc.json).
+11. FTP into your app service (aka web app) and update settings.php to reflect your Drupal database location. Instructions on how to FTP are [here](https://docs.microsoft.com/en-us/azure/app-service/app-service-deploy-ftp?toc=%2fazure%2fapp-service%2fcontainers%2ftoc.json).
 
 ## How to Deploy Code Changes to your Azure App Service
-1. Set up continuous delivery as described [here](https://blogs.msdn.microsoft.com/devops/2017/05/10/use-azure-portal-to-setup-continuous-delivery-for-web-app-on-linux/). Alternatively, follow the steps [here](https://docs.microsoft.com/en-us/vsts/build-release/apps/cd/azure/aspnet-core-to-acr?view=vsts).
-   
-    ![alt text](https://docs.microsoft.com/en-us/vsts/build-release/apps/cd/azure/_img/aspnet-core-to-acr/cicddockerflow.png?view=vsts)
+1. Set up continuous delivery as described [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/apps/cd/deploy-webdeploy-webapps).
 
 
 ## Troubleshooting
