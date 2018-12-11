@@ -1,3 +1,8 @@
+## Things you Should Know About Azure App Services (Web Apps) and Linux
+[MSDN Blogs](https://blogs.msdn.microsoft.com/waws/2017/09/08/things-you-should-know-web-apps-and-linux)
+
+## Creating a Custome Docker Image for Azure App Services
+[Tutorial](https://docs.microsoft.com/en-us/azure/app-service/containers/tutorial-custom-docker-image)
 
 ## Azure Application Insights
 [What is Azure Application Insights](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-overview)
