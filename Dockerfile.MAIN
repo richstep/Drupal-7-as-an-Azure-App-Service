@@ -15,13 +15,6 @@ RUN chmod 777 /bin/init_container.sh \
    && dos2unix /bin/init_container.sh \
    && rm -rf /var/lib/apt/lists/* 
 
-RUN mkdir -p /myvol \
-    && echo "hello world" > /myvol/greeting
-VOLUME /myvol
-
-RUN mkdir -p ${DRUPAL_HOME}/sites/default/files \
-    && echo "hello world defaultfiles" > ${DRUPAL_HOME}/sites/default/files/greeting2
-VOLUME ${DRUPAL_HOME}/sites/default/files
 
 # *** Add your Drupal 7 files to the image ***
 ADD drupal7-codebase/. $DRUPAL_FILE_TEMP_HOME
